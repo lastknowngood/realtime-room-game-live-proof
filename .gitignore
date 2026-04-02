@@ -1,0 +1,9 @@
+.coverage
+.pytest_cache/
+.ruff_cache/
+.venv/
+*.egg-info/
+.tmp-local-server*.log
+__pycache__/
+app/__pycache__/
+tests/__pycache__/

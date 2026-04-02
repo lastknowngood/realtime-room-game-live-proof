@@ -1,0 +1,54 @@
+contract_version: v1
+
+lifecycle:
+  mode: live
+
+project:
+  name: realtime-room-game-live-proof
+  owner: lastknowngood
+  repository_url: https://github.com/lastknowngood/realtime-room-game-live-proof
+
+target:
+  platform_class: coolify-single-host-v1
+  host_label: coolify-01
+  environment: production
+
+exposure:
+  mode: public
+  domains:
+    - play.dental-school.education
+
+coolify:
+  app_type: dockerfile
+  resource_name: realtime-room-game-live-proof
+  project_name: live-proof-tests
+
+build:
+  source_type: git
+  source_ref: proof/realtime-room-game-live-proof-private-20260402-r1
+  runtime_notes: single FastAPI app serving a vanilla-JS browser client; server-authoritative two-player WebSocket room game; in-memory room state only.
+
+state:
+  stateful: false
+  data_paths: []
+  storage_class: none
+
+dependencies:
+  database: none
+  cache: none
+  object_storage: none
+
+secrets:
+  source_of_truth: none
+  required_secret_names: []
+
+operations:
+  healthcheck: GET /healthz
+  rollback_hint: same-day fail-closed proof path; if private websocket proof, commit-drift gate, redeploy gate, or public HTTPS/WSS proof goes red, remove the A record and delete the test-only app.
+  backup_class: stateless
+
+notes:
+  - Room state is ephemeral and resets on restart or redeploy.
+  - This proof does not claim multi-instance realtime scale, WebRTC, or durable active-game recovery.
+  - Coolify app creation for this proof is fixed to Dockerfile path `/Dockerfile`, internal port `8000`, and a deliberately disabled Coolify healthcheck while `GET /healthz` remains the logical readiness endpoint.
+  - Current steady state is local planning and implementation only; there is no live service, no DNS, and no retained runtime resource.
