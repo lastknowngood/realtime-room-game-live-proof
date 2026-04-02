@@ -16,9 +16,9 @@ Online-Spiel-Pfad auf `coolify-01`.
 
 ## Aktueller Zustand
 
-- das Repo ist lokal angelegt
-- Runtime, Contract und privater Probe-Helfer sind vorhanden
-- der erste Proof-Ref ist noch nicht publiziert
+- der erste Realtime-/WSS-Proof auf `coolify-01` ist erfolgreich belegt
+- `main` und `proof/realtime-room-game-live-proof-private-20260402-r1` sind
+  nach GitHub publiziert
 - es gibt aktuell keinen Live-Dienst aus diesem Repo auf `coolify-01`
 - `play.dental-school.education` hat aktuell oeffentlich weder `A` noch `AAAA`
 - dieses Repo fuehrt bewusst keine Datenbank, keinen Object Storage und keine
@@ -71,14 +71,39 @@ git status --short --ignored
 
 ## Proof-Status
 
-- lokaler Code- und Testpfad ist angelegt, aber noch nicht gruenerzwungen
-- der geplante erste Proof-Ref ist:
+- erster gruener Proof-Ref:
   - `proof/realtime-room-game-live-proof-private-20260402-r1`
-- beabsichtigter Proof-Claim:
+- belegter Proof-Claim:
   - single-instance browser room gameplay ueber HTTP(S)+WebSocket(S) hinter
     Coolify
   - shared authoritative state, turn enforcement, reload/resync und kurzer
     agent-only Public-Proof in zwei isolierten Browserkontexten
+- gruene Evidence:
+  - private HTTP-Readiness auf `http://play.dental-school.education`
+  - privater browserloser Room-/WebSocket-Probe
+  - Same-Ref-Redeploy auf demselben Commit
+  - kurzer Public-Proof auf `https://play.dental-school.education`
+  - browserloser `wss://`-Probe
+  - Browser-Proof in zwei isolierten Kontexten:
+    - Seat-Zuweisung `X` und `O`
+    - illegaler Move sichtbar abgelehnt
+    - Reload/Resync mid-round gruenerzwungen
+    - konsistenter Winner-State in beiden Kontexten
+- Cleanup-Endzustand:
+  - `A` und `AAAA` fuer `play.dental-school.education` wieder entfernt
+  - Coolify-App entfernt
+  - forced-host negativ:
+    - `HTTP 404`
+    - `HTTPS 503`
+- gefixter echter Defekt im Proof-Block:
+  - das Produktionsimage enthielt zuerst keine WebSocket-Runtime-Dependency
+  - Ursache:
+    - `websockets` lag nur in Dev-Dependencies
+  - Fix:
+    - `websockets` in Runtime-Dependencies gezogen
+  - kleine Regression-Checks:
+    - Packaging-Test
+    - Probe-Helfer-Test
 - bewusste Nicht-Claims:
   - kein WebRTC
   - keine horizontale Realtime-Skalierung

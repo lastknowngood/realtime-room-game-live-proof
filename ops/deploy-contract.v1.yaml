@@ -51,4 +51,4 @@ notes:
   - Room state is ephemeral and resets on restart or redeploy.
   - This proof does not claim multi-instance realtime scale, WebRTC, or durable active-game recovery.
   - Coolify app creation for this proof is fixed to Dockerfile path `/Dockerfile`, internal port `8000`, and a deliberately disabled Coolify healthcheck while `GET /healthz` remains the logical readiness endpoint.
-  - Current steady state is local planning and implementation only; there is no live service, no DNS, and no retained runtime resource.
+  - Current steady state is cleanup complete after successful private plus short public proof; there is no live service, no DNS, and no retained runtime resource.
