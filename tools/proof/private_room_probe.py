@@ -2,16 +2,46 @@ import argparse
 import asyncio
 import json
 import uuid
+from typing import NamedTuple
+from urllib.parse import urlsplit
 
 import httpx
 from websockets.asyncio.client import connect
 
 
-def ws_url_from_base(base_url: str, room_id: str, token: str) -> str:
-    http_scheme = 'https://' if base_url.startswith('https://') else 'http://'
-    ws_scheme = 'wss://' if http_scheme == 'https://' else 'ws://'
-    host = base_url.removeprefix(http_scheme).rstrip('/')
-    return f'{ws_scheme}{host}/ws/rooms/{room_id}?player_token={token}'
+def ws_url_for_host(room_host: str, base_url: str, room_id: str, token: str) -> str:
+    ws_scheme = 'wss://' if base_url.startswith('https://') else 'ws://'
+    return f'{ws_scheme}{room_host}/ws/rooms/{room_id}?player_token={token}'
+
+
+class WsConnectTarget(NamedTuple):
+    room_host: str
+    tcp_host: str | None
+    tcp_port: int | None
+
+
+def ws_connect_target(base_url: str, host_header: str | None) -> WsConnectTarget:
+    room_host = host_header or urlsplit(base_url).netloc
+    if host_header:
+        parsed = urlsplit(base_url)
+        return WsConnectTarget(
+            room_host=room_host,
+            tcp_host=parsed.hostname,
+            tcp_port=parsed.port or (443 if parsed.scheme == 'https' else 80),
+        )
+    return WsConnectTarget(room_host=room_host, tcp_host=None, tcp_port=None)
+
+
+def connect_ws(url: str, target: WsConnectTarget):
+    if target.tcp_host is not None and target.tcp_port is not None:
+        return connect(
+            url,
+            additional_headers=None,
+            proxy=None,
+            host=target.tcp_host,
+            port=target.tcp_port,
+        )
+    return connect(url, additional_headers=None, proxy=None)
 
 
 async def expect_room_state(websocket) -> dict[str, object]:
@@ -69,15 +99,17 @@ async def main() -> int:
         if room_id not in room_shell.text:
             raise RuntimeError('room shell missing room id')
 
-        async with connect(
-            ws_url_from_base(args.base_url, room_id, x_token),
-            additional_headers=headers,
+        ws_target = ws_connect_target(args.base_url, args.host_header)
+
+        async with connect_ws(
+            ws_url_for_host(ws_target.room_host, args.base_url, room_id, x_token),
+            ws_target,
         ) as ws_x:
             await expect_room_state(ws_x)
             await expect_room_state(ws_x)
-            async with connect(
-                ws_url_from_base(args.base_url, room_id, o_token),
-                additional_headers=headers,
+            async with connect_ws(
+                ws_url_for_host(ws_target.room_host, args.base_url, room_id, o_token),
+                ws_target,
             ) as ws_o:
                 await expect_room_state(ws_o)
                 join_state_x = await expect_room_state(ws_x)
