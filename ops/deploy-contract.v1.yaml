@@ -1,6 +1,8 @@
 contract_version: v1
 
 lifecycle:
+  # Contract class: `live` means this repo is eligible for a real Coolify proof/deploy.
+  # It does not by itself say whether a runtime is currently retained.
   mode: live
 
 project:
@@ -48,6 +50,7 @@ operations:
   backup_class: stateless
 
 notes:
+  - lifecycle.mode live is the contract/proof class; current retained runtime state is documented separately in README.md and this notes list.
   - Room state is ephemeral and resets on restart or redeploy.
   - This proof does not claim multi-instance realtime scale, WebRTC, or durable active-game recovery.
   - Coolify app creation for this proof is fixed to Dockerfile path `/Dockerfile`, internal port `8000`, and a deliberately disabled Coolify healthcheck while `GET /healthz` remains the logical readiness endpoint.

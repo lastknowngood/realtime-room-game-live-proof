@@ -16,6 +16,8 @@ Online-Spiel-Pfad auf `coolify-01`.
 
 ## Aktueller Zustand
 
+Klarstellung: `lifecycle.mode: live` beschreibt hier die Proof-/Deploy-Contract-Klasse. Ob aus diesem Repo aktuell ein Dienst, DNS oder Host-Ressourcen retained sind, steht in den folgenden Bulletpoints und in den `notes` des Deploy-Contracts.
+
 - der erste Realtime-/WSS-Proof auf `coolify-01` ist erfolgreich belegt
 - `main` und `proof/realtime-room-game-live-proof-private-20260402-r1` sind
   nach GitHub publiziert
