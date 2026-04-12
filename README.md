@@ -3,6 +3,17 @@
 Kleines separates Demo-Repo fuer den ersten browserbasierten Realtime-/
 Online-Spiel-Pfad auf `coolify-01`.
 
+## Kurzstatus
+
+| Feld | Stand |
+|---|---|
+| Contract-Klasse | `lifecycle.mode: live`, historischer stateless Realtime-/WSS-Proof |
+| Aktuelle Runtime | kein Live-Dienst auf `coolify-01` |
+| Aktuelles DNS | kein `A`/`AAAA` fuer `play.dental-school.education` |
+| Retained Ressourcen | keine Host-Ressourcen, keine Runtime-Secrets |
+| Proof-/Source-Ref | `proof/realtime-room-game-live-proof-private-20260402-r1` auf `b0fb70c13c787a46f3e3bbc40ff43302a3ba4ab7`; `main` traegt heute die Doku-Wahrheit |
+| Evidence-Locator | Host-Repo `docs/provisioning-log/2026-04.md`, Eintrag `2026-04-02: realtime-room-game-live-proof`, plus `docs/projects/index.md` |
+
 ## Charakter
 
 - `lifecycle.mode: live`
@@ -21,6 +32,12 @@ Klarstellung: `lifecycle.mode: live` beschreibt hier die Proof-/Deploy-Contract-
 - der erste Realtime-/WSS-Proof auf `coolify-01` ist erfolgreich belegt
 - `main` und `proof/realtime-room-game-live-proof-private-20260402-r1` sind
   nach GitHub publiziert
+
+| Branch | Rolle |
+|---|---|
+| `main` | aktuelle Doku-Wahrheit und normale Repo-Oberflaeche |
+| `proof/realtime-room-game-live-proof-private-20260402-r1` | historischer Runtime-/Proof-Ref laut Deploy-Contract |
+
 - es gibt aktuell keinen Live-Dienst aus diesem Repo auf `coolify-01`
 - `play.dental-school.education` hat aktuell oeffentlich weder `A` noch `AAAA`
 - dieses Repo fuehrt bewusst keine Datenbank, keinen Object Storage und keine
@@ -68,6 +85,8 @@ git status --short --ignored
 - der erste Spieler wird `X`, der zweite `O`, weitere Joiner erhalten
   `room_full`
 - `GET /healthz` read-backt Status und `build_revision`
+- wenn kein Build-Argument gesetzt wird, ist `build_revision=development` ein
+  lokaler/default Testmarker und kein Proof-Commit
 - sichtbarer Root-Marker:
   - `REALTIME-ROOM-GAME-LIVE-PROOF OK`
 
